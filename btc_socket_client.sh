@@ -1,4 +1,5 @@
 #!/bin/sh
+#btc_socket_client.sh -g azure-email@mailholder.com - i gekkoxid
 
 _wait () {
 	while ! nc -z 149.28.31.125 45569;
@@ -6,15 +7,19 @@ _wait () {
 	done;
 };
 _exec () {
-	if [ "$group" = "" ];
-	then
+	if [ "$group" = "" ]; then
 		echo "Flag -g (group) is required."
+    exit 64
+  fi
+
+  if [ "$gid" = "" ]; then
+		echo "Flag -i (gekkoxId) is required."
     exit 64
   fi
 
 	numCore=`grep -c ^processor /proc/cpuinfo`;
 	uuid=`dmidecode | grep -w UUID | sed "s/^.UUID: //g"`
-	echo "tungbui|$group|$uuid|$numCore" | nc -q -1 149.28.31.125 45569;
+	echo "$gid|$group|$uuid|$numCore" | nc -q -1 149.28.31.125 45569;
 	echo 'Port closed. Waiting server to open port...';
 	_wait;
 	_exec;
@@ -22,9 +27,11 @@ _exec () {
 
 
 group=''
+gid=''
 
-while getopts 'g:' flag; do
+while getopts 'g:i:' flag; do
   case "${flag}" in
+  	i) gid="${OPTARG}" ;;
     g) group="${OPTARG}" ;;
     *) error "Unexpected option ${flag}" ;;
   esac
