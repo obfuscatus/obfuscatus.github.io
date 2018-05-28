@@ -41,4 +41,4 @@ done
 
 echo "$group";
 
-#_exec;
+_exec;
