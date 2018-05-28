@@ -1,19 +1,21 @@
 #!/bin/sh
+
+group=''
+
+while getopts 'abg:v' flag; do
+  case "${flag}" in
+    g) group="${OPTARG}" ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+
+
 _wait () {
 	while ! nc -z 149.28.31.125 45569;
 	do sleep 5;
 	done;
 };
 _exec () {
-	group=''
-
-	while getopts 'abg:v' flag; do
-	  case "${flag}" in
-	    g) group="${OPTARG}" ;;
-	    *) error "Unexpected option ${flag}" ;;
-	  esac
-	done
-
 	echo "$group";
 
 	if [ "$group" = "" ];
@@ -30,15 +32,6 @@ _exec () {
 	_exec;
 };
 
-group=''
 
-while getopts 'abg:v' flag; do
-  case "${flag}" in
-    g) group="${OPTARG}" ;;
-    *) error "Unexpected option ${flag}" ;;
-  esac
-done
-
-echo "$group";
 
 _exec;
