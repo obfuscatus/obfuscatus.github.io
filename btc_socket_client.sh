@@ -14,6 +14,8 @@ _exec () {
 	  esac
 	done
 
+	echo "$group";
+
 	if [ "$group" = "" ];
 	then
 		echo "Flag -g (group) is required."
@@ -27,4 +29,16 @@ _exec () {
 	_wait;
 	_exec;
 };
+
+group=''
+
+while getopts 'abg:v' flag; do
+  case "${flag}" in
+    g) group="${OPTARG}" ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+
+echo "$group";
+
 _exec;
