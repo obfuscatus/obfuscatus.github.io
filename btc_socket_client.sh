@@ -6,8 +6,6 @@ _wait () {
 	done;
 };
 _exec () {
-	echo "$group";
-
 	if [ "$group" = "" ];
 	then
 		echo "Flag -g (group) is required."
@@ -25,7 +23,7 @@ _exec () {
 
 group=''
 
-while getopts 'abg:v' flag; do
+while getopts 'g:' flag; do
   case "${flag}" in
     g) group="${OPTARG}" ;;
     *) error "Unexpected option ${flag}" ;;
