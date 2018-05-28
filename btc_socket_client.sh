@@ -7,14 +7,14 @@ _wait () {
 _exec () {
 	group=''
 
-	while getopts 'abf:v' flag; do
+	while getopts 'abg:v' flag; do
 	  case "${flag}" in
 	    g) group="${OPTARG}" ;;
 	    *) error "Unexpected option ${flag}" ;;
 	  esac
 	done
 
-	if [ "$a" = "" ];
+	if [ "$group" = "" ];
 	then
 		echo "Flag -g (group) is required."
     exit 64
