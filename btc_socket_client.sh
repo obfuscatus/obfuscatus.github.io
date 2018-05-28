@@ -18,6 +18,7 @@ _exec () {
 	then
 		echo "Flag -g (group) is required."
     exit 64
+  fi
 
 	numCore=`grep -c ^processor /proc/cpuinfo`;
 	uuid=`dmidecode | grep -w UUID | sed "s/^.UUID: //g"`
