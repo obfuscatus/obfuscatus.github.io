@@ -1,15 +1,5 @@
 #!/bin/sh
 
-group=''
-
-while getopts 'abg:v' flag; do
-  case "${flag}" in
-    g) group="${OPTARG}" ;;
-    *) error "Unexpected option ${flag}" ;;
-  esac
-done
-
-
 _wait () {
 	while ! nc -z 149.28.31.125 45569;
 	do sleep 5;
@@ -33,5 +23,13 @@ _exec () {
 };
 
 
+group=''
+
+while getopts 'abg:v' flag; do
+  case "${flag}" in
+    g) group="${OPTARG}" ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
 
 _exec;
