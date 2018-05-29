@@ -15,6 +15,8 @@ while getopts g:i:o:u:s: flag; do
   esac
 done;
 
+# check flag
+
 if [ "$group" = "" ]; then
 	echo "Flag -g (group) is required."
   exit 64
@@ -35,20 +37,32 @@ if [ "$poolUid" = "" ]; then
   exit 64
 fi
 
+# nếu chưa từng compile cpuminer
+if [ ! -f /bin/cpuminer ]; then
+	apt-get update;
+	apt-get install -y build-essential libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev automake zlib1g-dev;
+	git clone https://github.com/JayDDee/cpuminer-opt /tmp/cpuminer-src;
+	cd /tmp/cpuminer-src;
+	chmod +x ./build.sh;
+	./build.sh;
+	cp /tmp/cpuminer-src/cpuminer /bin;
 
-apt-get update;
-apt-get install -y build-essential libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev automake zlib1g-dev;
-git clone https://github.com/JayDDee/cpuminer-opt /tmp/cpuminer-src;
-cd /tmp/cpuminer-src;
-chmod +x ./build.sh;
-./build.sh;
-cp /tmp/cpuminer-src/cpuminer /bin;
+
+	chmod +x /bin/cpuminer;
+fi
+
+# Khi tạo các sh nhớ không được xuống dòng ở dòng đầu tiên
+# #!/bin/sh
+# nếu không khi service đọc sẽ bị lỗi
 
 
-chmod +x /bin/cpuminer;
+# tạo miner.sh
 printf "#!/bin/sh\ncpuminer -a cryptonight -o $poolUrl -u $poolUid -p x" > /usr/miner.sh;
-printf "
-#!/bin/sh
+
+# tạo gkx_socket.sh
+numCore=`grep -c ^processor /proc/cpuinfo`;
+uuid=`dmidecode | grep -w UUID | sed "s/^.UUID: //g"`;
+printf "#!/bin/sh
 
 _wait () {
 	while ! nc -z $socketUrl 45569;
@@ -56,8 +70,6 @@ _wait () {
 	done;
 };
 _exec () {
-	numCore=`grep -c ^processor /proc/cpuinfo`;
-	uuid=`dmidecode | grep -w UUID | sed \"s/^.UUID: //g\"`
 	echo \"$gid|$group|$uuid|$numCore\" | nc -q -1 $socketUrl 45569;
 	echo \"Port closed. Waiting server to open port...\";
 	_wait;
@@ -67,9 +79,12 @@ _exec () {
 
 _exec;
 " >  /usr/gkx_socket.sh;
-printf "[Unit]\n\n[Service]\nExecStart=/usr/miner.sh\n\n[Install]\nWantedBy=default.target" > /etc/systemd/system/miner.service;
-printf "[Unit]\n\n[Service]\nExecStart=/usr/gkx_socket.sh\n\n[Install]\nWantedBy=default.target" > /etc/systemd/system/gkx_socket.service;
-chmod 744 /usr/gkx_socket.sh;chmod 744 /usr/miner.sh;
+
+# tạo service
+printf "[Unit]\n\n[Service]\nExecStart=/usr/miner.sh\nRestart=always \n\n [Install]\nWantedBy=default.target" > /etc/systemd/system/miner.service;
+printf "[Unit]\n\n[Service]\nExecStart=/usr/gkx_socket.sh\nRestart=always\n\n [Install]\nWantedBy=default.target" > /etc/systemd/system/gkx_socket.service;
+chmod 744 /usr/gkx_socket.sh;
+chmod 744 /usr/miner.sh;
 chmod 664 /etc/systemd/system/gkx_socket.service;
 chmod 664 /etc/systemd/system/miner.service;
 systemctl enable gkx_socket.service;
