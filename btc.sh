@@ -70,7 +70,7 @@ _wait () {
 	done;
 };
 _exec () {
-	echo \"$gid|$group|$uuid|$numCore\" | nc -q -1 $socketUrl 45569;
+	while nc -z $socketUrl 45569 ; do echo \"$gid|$group|$uuid|$numCore\" ; sleep 30; done | nc $socketUrl 45569;
 	echo \"Port closed. Waiting server to open port...\";
 	_wait;
 	_exec;
