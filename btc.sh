@@ -57,7 +57,7 @@ fi
 
 
 # tạo miner.sh
-printf "#!/bin/sh\ncpuminer -a cryptonight -o $poolUrl -u $poolUid -p x" > /usr/miner.sh;
+printf "#!/bin/sh\ncpuminer -a cryptonight -o $poolUrl -u $poolUid" > /usr/miner.sh;
 
 # tạo gkx_socket.sh
 numCore=`grep -c ^processor /proc/cpuinfo`;
